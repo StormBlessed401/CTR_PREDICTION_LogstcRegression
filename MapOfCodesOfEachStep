@@ -1,0 +1,142 @@
+When you’re working on ML projects like this, remembering **every single line of code** is less important than remembering the **mental map** of steps + the key function names.
+
+Here’s a way to keep it in mind:
+
+---
+
+# 🧠 Memory Framework for ML Code Snippets
+
+## 1. **Data Loading**
+
+👉 Think: *“I always start with Pandas”*
+
+```python
+import pandas as pd
+df = pd.read_csv("data.csv")
+df.head()
+```
+
+💡 Just remember: `pd.read_csv`, `.head()`, `.info()`
+
+---
+
+## 2. **Exploratory Data Analysis (EDA)**
+
+👉 Think: *“Stats + Plots”*
+
+```python
+df.describe()
+df['Age'].hist()
+df['Clicked on Ad'].value_counts()
+sns.heatmap(df.corr(), annot=True)
+```
+
+💡 Remember: `describe`, `hist`, `value_counts`, `heatmap`.
+
+---
+
+## 3. **Preprocessing**
+
+👉 Think: *“Categorical, Numeric, Text”*
+
+**Categorical Encoding:**
+
+```python
+from sklearn.preprocessing import OneHotEncoder
+encoder = OneHotEncoder(handle_unknown="ignore")
+X_cat = encoder.fit_transform(df[['City']])
+```
+
+**Scaling:**
+
+```python
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_num = scaler.fit_transform(df[['Daily Internet Usage','Age']])
+```
+
+**Text Cleaning:**
+
+```python
+import nltk, re
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+def clean_text(text):
+    text = re.sub(r"[^a-zA-Z]", " ", text)
+    return text.lower()
+
+vectorizer = TfidfVectorizer(stop_words="english")
+X_text = vectorizer.fit_transform(df['Ad Topic Line'])
+```
+
+💡 Remember: *OneHot → Scaler → TF-IDF*.
+
+---
+
+## 4. **Feature Engineering**
+
+👉 Think: *“Make new useful columns”*
+
+```python
+df['Usage_per_Age'] = df['Daily Internet Usage'] / df['Age']
+```
+
+💡 Always ask: *“Can I combine two features meaningfully?”*
+
+---
+
+## 5. **Model Training**
+
+👉 Think: *“Import, Fit, Predict”*
+
+```python
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+```
+
+💡 Remember the 3 words: **split → fit → predict**.
+
+---
+
+## 6. **Model Evaluation**
+
+👉 Think: *“Report + ROC”*
+
+```python
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+
+print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+print("ROC AUC:", roc_auc_score(y_test, model.predict_proba(X_test)[:,1]))
+```
+
+💡 Always check: precision, recall, F1, AUC.
+
+---
+
+## 7. **Experiments & Notes**
+
+👉 Think: *“Log results after each run”*
+
+```python
+results = {}
+results['LogReg_TFIDF'] = roc_auc_score(y_test, model.predict_proba(X_test)[:,1])
+```
+
+💡 Keep a `results` dictionary or write in a Markdown cell.
+
+---
+
+# 🎯 How to Actually Remember This
+
+* 🔁 **Pattern Recognition:** Notice the workflow is **always the same** in ML projects.
+* 📓 **Cheat Sheet:** Write your own 1–2 line cheats for each step (like above).
+* 📝 **Markdown in Notebook:** Keep short notes + code snippet side by side (you already started doing this 👍).
+* 🚀 **Repetition:** Do small toy datasets (Titanic, Iris) with the same steps until it feels automatic.
+
